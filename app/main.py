@@ -1,33 +1,27 @@
-from fastapi import FastAPI, APIRouter, status
+from app import models, risk_justification
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from .database import engine
 
 
 
 app = FastAPI()
-router = APIRouter()
 
 
-@router.get("/")
-def get_risk_justifications():
-    return "return all of the risk justification items"
+origins = [
+    "http://localhost:3000",
+]
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
-def create_risk_justification():
-    return "create risk justification item"
-
-@router.patch("/{risk_justificationId}")
-def update_risk_justification(risk_justificationId: str):
-    return f"update risk justification item with id: {risk_justificationId}"
-
-@router.get('/{risk_justificationId}')
-def get_risk_justification(risk_justificationId: str):
-    return f"get risk justification item with id {risk_justificationId}"
-
-@router.delete('/{risk_justificationId}')
-def delete_risk_justification(risk_justificationId: str):
-    return f"delete risk justification item with id {risk_justificationId}"
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-app.include_router(router, tags=['risk_justification'], prefix="/api/risk_justifications")
+app.include_router(router, tags=['RiskJustifications'], prefix="/api/risk_justifications")
 
 
 @app.get("/api/healthchecker")
